@@ -2,7 +2,18 @@ import uuid
 postContent=[]
 postTemplate=[]
 postID=''
-
+postTitle=''
+postDate=''
+imageSize=500
+def getPostTitle():
+        t=input("Post Title: ")
+        return t
+def getPostDate():
+        t=input("Post Date (FORMAT DD/MM/YY): ")
+        return t
+def getImageSize():
+        t=int(input("Image Size (press enter for default 500): "))
+        return t
 def generatePostID():
 	ID=uuid.uuid1()
 	return ID
@@ -19,7 +30,14 @@ def processPost(postTempList):
 					break
 				else:
 					s=s+c
-			print(s)
+			if s=='TITLE':
+                                print(s)
+                        if s=='DATE':
+                                print(s)
+                        if s=='IMAGESIZE':
+                                print(s)
+                        if s=='CONTENT':
+                                print(s)
 
 
 def readNewPost(fileName):
@@ -29,7 +47,11 @@ def readNewPost(fileName):
 		postContent.append(line)
 		line = f.readline()
 readNewPost('newPost.txt')
+
 postID= generatePostID()
 postTemplate = getPostTemplate()
 print(postID)
+postTitle=getPostTitle()
+postDate= getPostDate()
+imageSize=getImageSize()
 processPost(postTemplate)
