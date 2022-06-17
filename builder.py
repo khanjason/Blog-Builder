@@ -1,6 +1,7 @@
 import uuid
 postContent=[]
 postTemplate=[]
+indexTemplate=[]
 postID=''
 postTitle=''
 postDate=''
@@ -26,10 +27,16 @@ def getImageSize():
 def generatePostID():
 	ID=uuid.uuid1()
 	return ID
-def getPostTemplate():
-	template=open("postTemplate.txt")
+def getPostTemplate(file):
+	template=open(file)
 	tmp = template.read();
 	return (tmp.split('['))
+def splitIndex(file):
+        template=open(file)
+        tmp = template.read();
+        sp= tmp.split('leftcolumn">')
+        sp[0] = sp[0] +'leftcolumn">'
+        return sp
 def processPost(postTempList):
 	if len(postTempList)>1:
 		for i in range(1,len(postTempList)):
@@ -63,6 +70,9 @@ def processPost(postTempList):
                                 newTmp = cont + (postTempList[i][8:])
                                 postTempList[i]=newTmp
                                 #print(postTempList)
+			if s=='POSTFILE':
+                                newTmp = "post_"+str(postID)+".html"+ (postTempList[i][9:])
+                                postTempList[i]=newTmp
 	return postTempList
 
 
@@ -76,18 +86,28 @@ def readNewPost(fileName):
                 line = f.readline()
 def writePostFile():
         fname= "post_"+str(postID)+".html"
-        with open(fname, 'w') as f:
+        with open('../blog/posts/'+fname, 'w') as f:
                 f.writelines(toWrite)
+def writeIndexFile():
+        with open('../blog/index.html','w') as f:
+                f.writelines(indexTemplate[0])
+                f.writelines(indexWrite)
+                f.writelines(indexTemplate[1])
 
 readNewPost('newPost.txt')
 
 postID= generatePostID()
-postTemplate = getPostTemplate()
+postTemplate = getPostTemplate("postTemplate.txt")
 print(postID)
 postTitle=getPostTitle()
 postDate= getPostDate()
 imageFileName = getImage()
 imageSize=getImageSize()
 toWrite=processPost(postTemplate)
-print(toWrite)
+#print(toWrite)
 writePostFile()
+cardTemplate = getPostTemplate("cardTemplate.txt")
+indexWrite = processPost(cardTemplate)
+
+indexTemplate = splitIndex("../blog/index.html")
+writeIndexFile()
